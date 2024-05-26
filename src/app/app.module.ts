@@ -7,9 +7,10 @@ import { IconsProviderModule } from './icons-provider.module';
 import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
+import { ProjectService } from './pages/services/project.serivce';
 
 registerLocaleData(zh);
 
@@ -24,10 +25,10 @@ registerLocaleData(zh);
     NgZorroAntdModule,
     FormsModule,
     HttpClientModule,
-    NoopAnimationsModule
-    // BrowserAnimationsModule
+    NoopAnimationsModule,
+    // BrowserAnimationsModule 
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, ProjectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
