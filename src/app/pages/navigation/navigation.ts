@@ -10,7 +10,7 @@ export const navigation: MenuNavigation[] = [
                 title: "后台用户",
                 icon: "",
                 type: "item",
-                url: "/welcome"
+                url: "backend-account"
             }
         ]
     }

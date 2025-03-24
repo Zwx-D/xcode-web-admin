@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-    this.route.navigate(['/welcome']);
+    this.route.navigate(['/backend-account']);
   }
 
   constructor(private fb: FormBuilder, private route: Router) {

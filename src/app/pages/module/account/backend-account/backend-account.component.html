@@ -1,0 +1,42 @@
+<!-- <div nz-row>
+    <div nz-col nzSpan="24">
+        <div nz-row>
+            <div nzOffset="19" nz-col nzSpan="2">
+                <button nz-button nzType="default">展开</button>
+            </div>
+            <div nz-col nzSpan="2">
+                <button nz-button nzType="primary">增加筛选</button>
+            </div>
+        </div>
+        <form nz-form [formGroup]="selectData">
+            <nz-form-item *ngFor="let item of selectConfig">
+                <nz-form-label [nzSpan]="3" [nzFor]="item.column">{{item.label}}</nz-form-label>
+                <nz-form-control [nzSpan]="6" [nzErrorTip]="item.nzErrorTip">
+                    <input nz-input [name]="item.column" [id]="item.column" [formControlName]="item.column"
+                        [placeholder]="item.placeholder" />
+                </nz-form-control>
+                <nz-form-control nzOffset="1">
+                    <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                        (click)="removeField(control, $event)"></i>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</div> -->
+<div nz-row>
+    <nz-table #outBordered nzOuterBordered [nzData]="dataSet" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
+        [nzShowPagination]="showPagination" [nzLoading]="loading" [nzTotal]="total" 
+        [nzPageSizeOptions]="pageSizeOptions"
+        >
+        <thead>
+            <tr>
+                <th *ngFor="let item of colummConfig">{{item.label}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of outBordered.data">
+                <td *ngFor="let item of colummConfig">{{ data[item.name] }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
