@@ -5,4 +5,5 @@ export class BackendConfig {
     systemName: string = '系统';
     systemBarImg: string = '';
     bar: MenuNavigation[] = navigation;
+    baseUrl:string;
 }

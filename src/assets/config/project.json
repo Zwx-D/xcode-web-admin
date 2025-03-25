@@ -1,6 +1,7 @@
 {
     "config": {
         "systenName": "测试系统",
-        "systemBarImg": "https://ng.ant.design/assets/img/logo.svg"
+        "systemBarImg": "https://ng.ant.design/assets/img/logo.svg",
+        "baseUrl":"http://localhost:8080"
     }
 }

@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { BackendAccountService } from 'src/app/pages/services/backend-account.service';
+import { ColummConfig, SelectConfig } from 'src/app/pages/type/list.response.module';
 
 @Component({
   selector: 'app-backend-account',
@@ -19,7 +23,43 @@ export class BackendAccountComponent implements OnInit {
     {
       name: 'username',
       selectType: 'input',
+      label: '账号',
+      enableSelect: false
+    },
+    {
+      name: 'realName',
+      selectType: 'input',
       label: '用户名',
+      enableSelect: false
+    },
+    {
+      name: 'role',
+      selectType: 'input',
+      label: '角色',
+      enableSelect: false
+    },
+    {
+      name: 'enabled',
+      selectType: 'input',
+      label: '是否启用',
+      enableSelect: false
+    },
+    {
+      name: 'lastLoginTime',
+      selectType: 'input',
+      label: '最后登录时间',
+      enableSelect: false
+    },
+    {
+      name: 'lastModifiedTime',
+      selectType: 'input',
+      label: '最后修改时间',
+      enableSelect: false
+    },
+    {
+      name: 'lastModifiedBy',
+      selectType: 'input',
+      label: '最后修改人',
       enableSelect: false
     }
   ];
@@ -36,13 +76,21 @@ export class BackendAccountComponent implements OnInit {
   total: number = 0
   pageSizeOptions: number[] = [10, 20, 30, 40, 50];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private backendAccountService: BackendAccountService) { }
 
   ngOnInit() {
+    // 初始化筛选表单
+    this.initSelectForm();
+    // 获取数据
+    this.setData();
+  }
+
+  // 初始化筛选表单
+  private initSelectForm() {
     this.selectData = this.fb.group({});
-    this.colummConfig.forEach(item => {
+    this.colummConfig.forEach((item) => {
       if (item.enableSelect) {
-        let control = this.fb.control(null);
+        const control = new FormControl(null);
         this.selectData.addControl(item.name, control);
         this.selectConfig.push({
           label: item.label,
@@ -52,58 +100,17 @@ export class BackendAccountComponent implements OnInit {
         });
       }
     });
-    this.setData();
   }
 
   removeField(i: { id: number; controlInstance: string }, e: MouseEvent) { }
 
   setData() {
-    let data = [];
-    for (let i = 0; i < 199; i++) {
-      data.push(
-        {
-          id: i,
-          username: "用户名" + i
-        }
-      );
-    }
-    this.dataSet = data;
-    this.total = 50;
-    this.loading = false;
+    this.loading = true;
+    this.backendAccountService.getUserList().then(res => {
+      this.dataSet = res.data || [];
+      this.total = res.total || 0;
+    }).finally(() => {
+      this.loading = false;
+    });
   }
-}
-
-export type SelectConfig = {
-  label: string;
-  column: string;
-  errorTip?: string;
-  placeholder?: string;
-}
-
-interface BaseColummConfig {
-  name: string;
-  label: string;
-  enableSelect: boolean;
-  errorTip?: string;
-  placeholder?: string;
-}
-
-interface SelectColummConfig extends BaseColummConfig {
-  selectType: 'select';
-  option: SelectOpt[];
-}
-
-interface InputColummConfig extends BaseColummConfig {
-  selectType: 'input';
-}
-
-interface DateColummConfig extends BaseColummConfig {
-  selectType: 'date';
-}
-
-export type ColummConfig = InputColummConfig | SelectColummConfig | DateColummConfig;
-
-export class SelectOpt {
-  label: string;
-  value: string;
 }
