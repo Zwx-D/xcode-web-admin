@@ -24,7 +24,6 @@ export class TokenInterceptor implements HttpInterceptor {
         if (this.excludedPaths.some(path => request.url.includes(path))) {
             return next.handle(request);
         }
-
         const token = this.loginService.getToken();
         if (token) {
             request = request.clone({
@@ -33,7 +32,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 }
             });
         }
-        
+
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {

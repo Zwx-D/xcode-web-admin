@@ -18,20 +18,14 @@ export class LoginComponent implements OnInit {
     }
     if (this.validateForm.valid) {
       const { userName, password } = this.validateForm.value;
-      this.loginService.login(userName, password).subscribe(
-        (response) => {
-          if (response && response.token) {
-            this.loginService.setToken(response.token);
-            console.log(this.loginService.getToken());
-            this.route.navigate(['/home']);
-          } else {
-            console.error('未返回有效的 token');
-          }
-        },
-        (error) => {
-          console.error('登录请求失败:', error);
+      this.loginService.login(userName, password).then(response => {
+        if (response && response.token) {
+          this.loginService.setToken(response.token);
+          this.route.navigate(['/home']);
+        } else {
+          console.error('未返回有效的 token');
         }
-      );
+      }).catch((error) => { console.error('登录请求失败:', error); });
     }
   }
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { ProjectService } from './project.serivce';
 
 @Injectable({
@@ -9,12 +8,13 @@ import { ProjectService } from './project.serivce';
 export class LoginService {
   private tokenKey = 'auth_token';
 
-  constructor(private http: HttpClient, private projectService: ProjectService) {}
 
-  login(username: string, password: string): Observable<any> {
+  constructor(private http: HttpClient, private projectService: ProjectService) { }
+
+  login(username: string, password: string): Promise<any> {
     const apiBaseUrl = this.projectService.getBackendConfig().baseUrl;
     const loginUrl = `${apiBaseUrl}/api/backendUser/login`;
-    return this.http.post(loginUrl, { username, password });
+    return this.http.post(loginUrl, { username, password }).toPromise();
   }
 
   setToken(token: string): void {

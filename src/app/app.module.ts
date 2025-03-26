@@ -12,6 +12,8 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { ProjectService } from './pages/services/project.serivce';
 import { TokenInterceptor } from './pages/services/token.interceptor';
+import { LoginService } from './pages/services/login.service';
+
 
 registerLocaleData(zh);
 
@@ -28,7 +30,7 @@ registerLocaleData(zh);
     NgZorroAntdModule,
     FormsModule,
     HttpClientModule,
-    NoopAnimationsModule,
+    NoopAnimationsModule
     // BrowserAnimationsModule 
   ],
   providers: [
@@ -38,7 +40,7 @@ registerLocaleData(zh);
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }],
+    }, LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

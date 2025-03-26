@@ -21,6 +21,17 @@
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
         </span>
+        
+        <!-- 添加用户名称和下拉菜单 -->
+        <div class="user-info" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="hover">
+          <span>{{ userName }}</span>
+        </div>
+        <nz-dropdown-menu #userMenu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="logout()">退出登录</li>
+          </ul>
+        </nz-dropdown-menu>
+
       </div>
     </nz-header>
     <nz-content>
