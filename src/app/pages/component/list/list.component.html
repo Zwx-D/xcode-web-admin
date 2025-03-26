@@ -1,0 +1,25 @@
+<div nz-row style="margin-bottom: 10px;" [nzJustify]="justify" [nzAlign]="align">
+    <div nz-col *ngFor="let item of btnConfig">
+        <button nz-button [nzType]="item.type" (click)="item.event()" [nzType]="item.type" [nzShape]="item.shape"
+            [disabled]="item.disabled">
+            <i nz-icon *ngIf="item.icon" [nzType]="item.icon"></i>
+            {{item.label}}
+        </button>
+    </div>
+</div>
+<div nz-row>
+    <nz-table #outBordered nzOuterBordered [nzData]="dataSet" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
+        [nzShowPagination]="showPagination" [nzLoading]="loading" [nzTotal]="total"
+        [nzPageSizeOptions]="pageSizeOptions">
+        <thead>
+            <tr>
+                <th *ngFor="let item of columnConfig">{{item.label}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of outBordered.data">
+                <td *ngFor="let item of columnConfig">{{ data[item.name] }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

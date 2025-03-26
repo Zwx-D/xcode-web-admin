@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { CarouselComponent } from "./carousel.component";
 import { CarouselRoutingModule } from "./carousel-routing.module";
+import { CarouselService } from "src/app/pages/services/carousel.service";
+import { ListComponentModule } from "src/app/pages/component/list/list.component.module";
 
 @NgModule({
     imports: [
@@ -16,9 +18,11 @@ import { CarouselRoutingModule } from "./carousel-routing.module";
         CommonModule,
         ReactiveFormsModule,
         NzButtonModule,
-        NzIconModule
+        NzIconModule,
+        ListComponentModule
     ],
     declarations: [CarouselComponent],
-    exports: [CarouselComponent]
+    exports: [CarouselComponent],
+    providers: [CarouselService]
 })
 export class CarouselModule { }

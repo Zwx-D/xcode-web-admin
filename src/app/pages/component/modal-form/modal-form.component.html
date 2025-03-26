@@ -1,0 +1,42 @@
+<form nz-form [formGroup]="form">
+    <nz-form-item *ngFor="let item of formConfig">
+        <nz-form-label [nzSpan]="6" [nzRequired]="item.required">{{item.label}}</nz-form-label>
+        <nz-form-control [nzSpan]="10" [nzErrorTip]="item.errorTip || ''">
+            <!-- <input [type]="item.type" nz-input [formControlName]="item.key"
+                [placeholder]="item.placeholder?item.placeholder:''" /> -->
+            <ng-container [ngSwitch]="item.type">
+                <!-- 处理 text 和 number 类型 -->
+                <input *ngSwitchCase="'text'" [type]="item.type" nz-input [formControlName]="item.key"
+                    [placeholder]="item.placeholder || ''" />
+                <input *ngSwitchCase="'number'" [type]="item.type" nz-input [formControlName]="item.key"
+                    [placeholder]="item.placeholder || ''" />
+                <!-- 处理 datepicker 类型 -->
+                <nz-date-picker *ngSwitchCase="'datepicker'" [formControlName]="item.key"
+                    [nzPlaceHolder]="item.placeholder || ''"></nz-date-picker>
+                <!-- 处理 checkbox 类型 -->
+                <label nz-checkbox *ngSwitchCase="'checkbox'" [formControlName]="item.key">{{ item.label }}</label>
+                <!-- 可以根据需要添加更多类型的处理 -->
+                <ng-container *ngSwitchDefault>
+                    <!-- 默认情况，这里可以添加错误提示或其他逻辑 -->
+                    <span>不支持的输入类型: {{ item.type }}</span>
+                </ng-container>
+
+                <nz-upload *ngSwitchCase="'upload'" class="avatar-uploader" [nzAction]="uploadUrl" nzName="avatar"
+                    nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"
+                    [nzSize]="uploadSize" [nzLimit]="uploadLimit"
+                    [nzCustomRequest]="uploadImg"
+                    >
+                    <ng-container *ngIf="!avatarUrl">
+                        <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                        <div class="ant-upload-text">{{ item.label }}</div>
+                    </ng-container>
+                    <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                </nz-upload>
+                <button nz-button nzType="primary" *ngSwitchCase="'upload'">
+                    从历史中选取
+                </button>
+
+            </ng-container>
+        </nz-form-control>
+    </nz-form-item>
+</form>

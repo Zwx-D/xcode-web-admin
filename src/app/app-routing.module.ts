@@ -4,9 +4,7 @@ import { AuthGuard } from './pages/services/auth-guard.service';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
-  {
-    path: 'home', loadChildren: () => import('./pages/module/account/backend-account/backend-accont.module').then(m => m.BackendAccountModule)
-  },
+  { path: 'home', loadChildren: () => import('./pages/module/wx-content-management/carousel/carousel.module').then(m => m.CarouselModule) },
   // { path: 'welcome', loadChildren: () => import('./pages/module/welcome/welcome.module').then(m => m.WelcomeModule) },
   { path: 'login', loadChildren: () => import('./pages/module/login/login.module').then(m => m.LoginModule) },
   { path: 'backend-account', loadChildren: () => import('./pages/module/account/backend-account/backend-accont.module').then(m => m.BackendAccountModule) },

@@ -18,6 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   userName: string = '';
 
   constructor(private loginService: LoginService, private http: HttpClient, private router: Router, private projectService: ProjectService) {
+    this.projectService.init();
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isLoginRoute = this.router.url === '/login';

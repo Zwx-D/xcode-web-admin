@@ -11,7 +11,7 @@ export class ProjectService {
     backendConfig: BackendConfig;
 
     constructor(private http: HttpClient) {
-        this.init();
+        // this.init();
     }
 
     public init() {
@@ -21,7 +21,6 @@ export class ProjectService {
                 this.backendConfig.systemBarImg = res.config.systemBarImg;
                 this.backendConfig.systemName = res.config.systenName;
                 this.backendConfig.baseUrl = res.config.baseUrl || environment.baseUrl;;
-                console.log(this.backendConfig);
             });
     }
 
