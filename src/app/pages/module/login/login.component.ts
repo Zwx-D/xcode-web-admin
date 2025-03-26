@@ -21,6 +21,11 @@ export class LoginComponent implements OnInit {
       this.loginService.login(userName, password).then(response => {
         if (response && response.token) {
           this.loginService.setToken(response.token);
+          const tokenPayload = this.loginService.parseJwt(response.token);
+          const realName = tokenPayload && tokenPayload.realName;
+          if (realName) {
+            this.loginService.setRealName(realName);
+          }
           this.route.navigate(['/home']);
         } else {
           console.error('未返回有效的 token');
