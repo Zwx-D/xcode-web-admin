@@ -21,7 +21,7 @@
                     <span>不支持的输入类型: {{ item.type }}</span>
                 </ng-container>
 
-                <nz-upload *ngSwitchCase="'upload'" class="avatar-uploader" [nzAction]="uploadUrl" nzName="avatar"
+                <nz-upload *ngSwitchCase="'upload'" class="avatar-uploader" [nzAction]="uploadUrl" [nzName]="item.key"
                     nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"
                     [nzSize]="uploadSize" [nzLimit]="uploadLimit"
                     [nzCustomRequest]="uploadImg"

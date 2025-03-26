@@ -52,16 +52,16 @@ export class ModalFormComponent implements OnInit {
   }
 
   uploadImg = (item: {
+    name:string;
     action: string;
     file: File;
     onError: (error: Error, body?: any) => void;
     onProgress: (e: { percent: number }) => void;
     onSuccess: (response: any, xhr?: any) => void;
   }) => {
-    console.log(item);
     this.uploadService.uploadFile(item.file).then(res => {
       this.avatarUrl = this.uploadService.previewImg(res.uuid);
-
+      this.form.get(item.name).setValue(res.uuid);
     }).catch(err => {
       console.error("上传图片失败");
       console.error(err)
