@@ -3,6 +3,7 @@ import { NzButtonModule, NzCheckboxModule, NzDatePickerModule, NzFormModule, NzG
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ModalFormComponent } from "./modal-form.component";
+import { SelectImageModule } from "../select-image/select-image.module";
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { ModalFormComponent } from "./modal-form.component";
         NzRadioModule,
         NzSelectModule,
         NzSwitchModule,
-        NzUploadModule
+        NzUploadModule,
+        SelectImageModule
     ],
     declarations: [ModalFormComponent],
     exports: [ModalFormComponent],

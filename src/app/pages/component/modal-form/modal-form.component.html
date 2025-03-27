@@ -32,7 +32,7 @@
                     </ng-container>
                     <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
                 </nz-upload>
-                <button nz-button nzType="primary" *ngSwitchCase="'upload'">
+                <button nz-button nzType="primary" *ngSwitchCase="'upload'" (click)="selectImage(item.key)">
                     从历史中选取
                 </button>
 

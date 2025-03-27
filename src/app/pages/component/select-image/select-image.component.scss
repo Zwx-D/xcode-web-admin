@@ -1,0 +1,85 @@
+// .filter-row {
+//   display: flex;
+//   gap: 10px;
+//   margin-bottom: 20px;
+//   justify-content: space-between;
+// }
+
+// .item-list {
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 20px;
+// }
+
+// .item {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   cursor: pointer;
+// }
+
+// .file-icon {
+//   position: relative;
+// }
+
+// .file-icon label[nz-checkbox] {
+//   position: absolute;
+//   top: 5px;
+//   right: 5px;
+// }
+
+// .file-actions {
+//   display: none;
+//   position: absolute;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   background-color: rgba(0, 0, 0, 0.7);
+//   color: white;
+//   text-align: center;
+// }
+
+// .file-icon:hover .file-actions {
+//   display: block;
+// }
+
+// .back-button {
+//   margin-left: auto;
+// }
+
+// .item img {
+//   width: 100px;
+//   height: 100px;
+//   object-fit: cover;
+// }
+
+// .item-name {
+//   text-align: center;
+//   margin-top: 5px;
+//   width: 100%; /* 确保名称宽度与图片一致 */
+// }    
+
+
+
+
+
+
+
+.responsive-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-name {
+  text-align: center;
+  margin-top: 5px;
+}    

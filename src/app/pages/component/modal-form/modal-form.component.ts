@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalFormItem } from '../../type/list.response.module';
 import { UploadService } from '../../services/files.service';
+import { NzModalService } from 'ng-zorro-antd';
+import { SelectImageComponent } from '../select-image/select-image.component';
 
 @Component({
   selector: 'app-modal-form',
@@ -25,7 +27,8 @@ export class ModalFormComponent implements OnInit {
   form: FormGroup;
 
   constructor(private fb: FormBuilder,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private modalService: NzModalService
   ) { }
 
   ngOnInit() {
@@ -52,7 +55,7 @@ export class ModalFormComponent implements OnInit {
   }
 
   uploadImg = (item: {
-    name:string;
+    name: string;
     action: string;
     file: File;
     onError: (error: Error, body?: any) => void;
@@ -67,6 +70,23 @@ export class ModalFormComponent implements OnInit {
       console.error(err)
     });
   };
+
+  selectImage(key: string) {
+
+    console.log(key);
+    this.modalService.create({
+      nzTitle: '选择图片',
+      nzContent: SelectImageComponent,
+      nzComponentParams: {},
+      nzWidth: '80%',
+      nzOnOk: () => new Promise((resolve) => {
+      }),
+      nzOnCancel: () => {
+        this.onCancel();
+      }
+    });
+
+  }
 
 
 }
