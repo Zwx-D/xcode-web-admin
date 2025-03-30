@@ -42,11 +42,12 @@ export type ColummConfig = InputColummConfig | SelectColummConfig | DateColummCo
 // 列配置
 export interface ColumnConfig {
     name: string;
-    selectType: string;
     label: string;
-    enableSelect: boolean;
+    enableSelect?: boolean;
+    selectType?: string;
     errorTip?: string;
     placeholder?: string;
+    isImg?: boolean;
 }
 
 export class SelectOpt {
@@ -64,7 +65,7 @@ export class ButtonConfig {
     event: () => void
 }
 
-type InputType = 'text' | 'number' | 'datepicker' | 'checkbox'| 'switch' | 'upload';
+type InputType = 'text' | 'number' | 'datepicker' | 'checkbox' | 'switch' | 'upload';
 export interface ModalFormItem {
     key: string;
     vali?: ValidatorFn;
@@ -94,4 +95,21 @@ export interface CarouselVM {
     imageUuid: string;
     linkUrl: string;
     sortOrder: number;
+}
+
+
+export class ListQueryParams {
+    page: number = 0;
+    size: number = 10;
+    sort?: string;
+    [key: string]: any;
+    // [key: string]: FieldFilter | FieldFilter[] | string | number | undefined;  
+}
+
+
+type QueryOperator = 'equals' | 'contains' | 'gt' | 'lt' | 'gte' | 'lte' | 'in';
+
+interface FieldFilter {
+    operator: QueryOperator;  // 查询操作符
+    value: string | number | boolean | any[];  // 查询的值
 }

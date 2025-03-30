@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModalFormItem } from '../../type/list.response.module';
-import { UploadService } from '../../services/files.service';
+import { ModalFormItem } from '../../type/list.module';
+import { FilesService } from '../../services/files.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { SelectImageComponent } from '../select-image/select-image.component';
 
@@ -27,7 +27,7 @@ export class ModalFormComponent implements OnInit {
   form: FormGroup;
 
   constructor(private fb: FormBuilder,
-    private uploadService: UploadService,
+    private uploadService: FilesService,
     private modalService: NzModalService
   ) { }
 

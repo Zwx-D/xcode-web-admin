@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ProjectService } from './project.serivce';
-import { CommonResponse, UserVM } from '../type/list.response.module';
+import { CommonResponse, UserVM } from '../type/list.module';
 import { map } from 'rxjs/operators';
 import { User } from '../type/backend-account.type';
 
