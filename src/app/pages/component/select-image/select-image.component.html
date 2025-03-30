@@ -1,15 +1,5 @@
 <div>
-  <div nz-row [nzGutter]="36">
-
-    <nz-space nzSize="middle">
-      <input nz-input placeholder="文件夹筛选" [(ngModel)]="folderFilter" [disabled]="isShowingFiles || fileNameFilter" />
-      <input nz-input placeholder="文件名筛选" [(ngModel)]="fileNameFilter" [disabled]="!isShowingFiles || folderFilter" />
-      <button nz-button (click)="resetFilters()">重置条件</button>
-      <button nz-button nzType="primary" (click)="filterItems()">筛选</button>
-      <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
-    
-    </nz-space>
-
+  <div nz-row [nzGutter]="36" style="margin-bottom: 10px;">
     <div nz-col [nzSpan]="6">
       <input nz-input placeholder="文件夹筛选" [(ngModel)]="folderFilter" [disabled]="isShowingFiles || fileNameFilter" />
     </div>
@@ -26,7 +16,6 @@
       <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
     </div>
   </div>
-
   <!-- <div class="filter-row">
     <input nz-input placeholder="文件夹筛选" [(ngModel)]="folderFilter" [disabled]="isShowingFiles || fileNameFilter" />
     <input nz-input placeholder="文件名筛选" [(ngModel)]="fileNameFilter" [disabled]="!isShowingFiles || folderFilter" />
@@ -35,14 +24,23 @@
     <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
   </div> -->
 
-  <div nz-row nzGutter="16">
-    <div nz-col *ngFor="let item of items">
-        <div class="image-container">
-            <img src="assets/image/file_folder.png" class="responsive-image" />
-            <span class="image-name">name</span>
-        </div>
+  <div nz-row *ngIf="!isShowingFiles">
+    <div nz-col [nzSpan]="3" *ngFor="let item of items">
+      <div class="image-container" (click)="loadFiles(item.uuid)">
+        <img src="assets/image/file_folder.png" class="responsive-image" />
+        <span class="image-name">{{item.name}}</span>
+      </div>
     </div>
-</div> 
+  </div>
+
+  <div nz-row *ngIf="isShowingFiles">
+    <div nz-col [nzSpan]="3" *ngFor="let item of items">
+      <div class="image-container" nz-popover [nzPopoverContent]="contentTemplate"  nzPopoverTrigger="hover" >
+        <img [src]="item.filePath" class="responsive-image" (click)="previewImage(item.filePath)" />
+        <span nz-tooltip [nzTooltipTitle]="item.name" class="image-name">{{item.name}}</span>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -65,6 +63,27 @@
         <span class="item-name">{{ item.name }}</span>
       </div>
     </div>
+  </div>-->
+
+  <div nz-row>
+    <div nz-col>
+      <nz-pagination [(nzPageIndex)]="currentPage" [nzPageSize]="pageSize" [nzTotal]="pageTotal"></nz-pagination>
+    </div>
   </div>
-  <nz-pagination [(nzPageIndex)]="currentPage" [nzPageSize]="pageSize" [nzTotal]="items.length"></nz-pagination> -->
 </div>
+
+
+<ng-template #contentTemplate let-item="item">
+  <div nz-row>
+    <div nz-col>
+      <button nz-button (click)="test(item)">
+        预览
+      </button>
+    </div>
+    <div nz-col>
+      <button nz-button (click)="test(item)">
+        选中
+      </button>
+    </div>
+  </div>
+</ng-template>

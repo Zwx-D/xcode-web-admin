@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { BackendAccountService } from 'src/app/pages/services/backend-account.service';
-import { ColummConfig, SelectConfig } from 'src/app/pages/type/list.response.module';
+import { ColummConfig, SelectConfig } from 'src/app/pages/type/list.module';
 
 @Component({
   selector: 'app-backend-account',

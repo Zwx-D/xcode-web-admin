@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ButtonConfig, ColumnConfig, CommonResponse, SelectConfig } from '../../type/list.response.module';
+import { ButtonConfig, ColumnConfig, CommonResponse, SelectConfig } from '../../type/list.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -14,6 +14,7 @@ export class ListComponent implements OnInit {
   justify = 'end';
   selectData!: FormGroup;
   selectConfig: SelectConfig[] = [];
+  scrollConfig = { x: '1200px', y: '240px' };
   @Input() btnConfig: ButtonConfig[] = []
   @Input() dataSet: any[] = [];
   @Input() columnConfig: ColumnConfig[] = [];

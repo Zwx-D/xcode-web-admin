@@ -4,7 +4,7 @@ import { NzModalService } from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { ModalFormComponent } from 'src/app/pages/component/modal-form/modal-form.component';
 import { CarouselService } from 'src/app/pages/services/carousel.service';
-import { ButtonConfig, CarouselVM, ColumnConfig, CommonResponse, ModalFormItem } from 'src/app/pages/type/list.response.module';
+import { ButtonConfig, CarouselVM, ColumnConfig, CommonResponse, ModalFormItem } from 'src/app/pages/type/list.module';
 
 @Component({
   selector: 'app-carousel',
@@ -29,6 +29,10 @@ export class CarouselComponent implements OnInit {
       selectType: 'input',
       label: 'ID',
       enableSelect: true
+    }, {
+      name: 'linkUrl',
+      label: '缩略图',
+      isImg: true
     }, {
       name: 'imageUuid',
       selectType: 'input',
@@ -55,12 +59,8 @@ export class CarouselComponent implements OnInit {
   carouselDataSubject = new BehaviorSubject<CommonResponse<CarouselVM>>({ data: [], total: 0 });
   loadData = () => {
     this.service.getCarouselList().then(res => {
-      const newData: CommonResponse<CarouselVM> = {
-        data: [
-          { id: 1, imageUuid: 'imageUuid', linkUrl: 'linkUrl', sortOrder: 1 },
-        ], total: 1
-      }
-      this.carouselDataSubject.next(newData);
+      console.log(res);
+      this.carouselDataSubject.next(res);
     })
   }
 
@@ -106,8 +106,16 @@ export class CarouselComponent implements OnInit {
     });
   }
 
-  onConfirm(data: any) {
-    console.log('确认数据:', data);
+  onConfirm(data: { imageUuid: string, sortOrder: number }) {
+    const req: CarouselVM = {
+      id: null,
+      imageUuid: data.imageUuid,
+      linkUrl: data.imageUuid,
+      sortOrder: data.sortOrder
+    };
+    this.service.createCarousel(req).then(res => {
+      this.loadData();
+    });
   }
 
   onCancel() {

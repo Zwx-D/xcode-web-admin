@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { FilesService } from '../../services/files.service';
+import { ListQueryParams } from '../../type/list.module';
 
 @Component({
   selector: 'app-select-image',
@@ -13,9 +15,10 @@ export class SelectImageComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   isShowingFiles = false;
-  currentFolderId: number | null = null;
+  currentFolderId: string | null = null;
   items: any[] = [];
-  constructor(private message: NzMessageService) {}
+  pageTotal: number = 0;
+  constructor(private message: NzMessageService, private filesService: FilesService, private modal: NzModalService) { }
 
   ngOnInit(): void {
     this.loadFolders();
@@ -24,13 +27,25 @@ export class SelectImageComponent implements OnInit {
   loadFolders(): void {
     this.isShowingFiles = false;
     this.currentFolderId = null;
-    this.items = mockFolders;
+    this.filesService.getfolderFilter().then(res => {
+      this.items = res.data;
+      this.pageTotal = res.total;
+    });
   }
 
-  loadFiles(folderId: number): void {
-    this.isShowingFiles = true;
-    this.currentFolderId = folderId;
-    this.items = mockFiles.filter(file => file.folderId === folderId);
+  loadFiles(folderId: string): void {
+    const queryParams: ListQueryParams = {
+      page: 0,
+      size: 10,
+      "folderUuid.equals": folderId
+    };
+    // this.items = mockFiles.filter(file => file.folderId === folderId);
+    this.filesService.getFiles(queryParams).then(res => {
+      this.items = res.data;
+      this.pageTotal = res.total;
+      this.currentFolderId = folderId;
+      this.isShowingFiles = true;
+    })
   }
 
   resetFilters(): void {
@@ -40,21 +55,36 @@ export class SelectImageComponent implements OnInit {
   }
 
   filterItems(): void {
-    if (this.folderFilter && this.fileNameFilter) {
-      this.message.error('文件夹筛选和文件名筛选只能使用一个');
-      return;
-    }
-    if (this.isShowingFiles) {
-      if (this.fileNameFilter) {
-        this.items = mockFiles.filter(file =>
-          file.folderId === this.currentFolderId && file.name.includes(this.fileNameFilter)
-        );
-      }
-    } else {
-      if (this.folderFilter) {
-        this.items = mockFolders.filter(folder => folder.name.includes(this.folderFilter));
-      }
-    }
+    // if (this.folderFilter && this.fileNameFilter) {
+    //   this.message.error('文件夹筛选和文件名筛选只能使用一个');
+    //   return;
+    // }
+    // if (this.isShowingFiles) {
+    //   if (this.fileNameFilter) {
+    //     this.items = mockFiles.filter(file =>
+    //       file.folderId === this.currentFolderId && file.name.includes(this.fileNameFilter)
+    //     );
+    //   }
+    // } else {
+    //   if (this.folderFilter) {
+    //     this.items = mockFolders.filter(folder => folder.name.includes(this.folderFilter));
+    //   }
+    // }
+  }
+
+
+  previewImage(imageUrl: string): void {
+    this.modal.create({
+      nzContent: `<img 
+      src="${imageUrl}" 
+      style="width: 100%;"
+      />`,
+      nzFooter: null, // 不显示底部按钮
+      nzWidth: '80%', // 调整放大图片的大小
+      nzClosable: true, // 关闭按钮在内容区域，不显示默认关闭按钮
+      nzMaskClosable: true, // 点击遮罩可关闭
+      nzBodyStyle: { padding: '0', textAlign: 'center' }
+    });
   }
 
   previewFile(file: any): void {
@@ -73,27 +103,10 @@ export class SelectImageComponent implements OnInit {
     this.loadFolders();
   }
 
+  test(data) {
+    console.log(data);
+  }
+
+
 }
 
-
-// 模拟接口返回数据
-const mockFolders = [
-  { id: 1, name: 'Folder 1' },
-  { id: 2, name: 'Folder 2' },
-  { id: 3, name: 'Folder 3' },
-  { id: 1, name: 'Folder 1' },
-  { id: 2, name: 'Folder 2' },
-  { id: 3, name: 'Folder 3' },
-  { id: 1, name: 'Folder 1' },
-  { id: 2, name: 'Folder 2' },
-  { id: 3, name: 'Folder 3' },
-  { id: 1, name: 'Folder 1' },
-  { id: 2, name: 'Folder 2' },
-  { id: 3, name: 'Folder 3' }
-];
-
-const mockFiles = [
-  { id: 1, name: 'File 1', folderId: 1 },
-  { id: 2, name: 'File 2', folderId: 1 },
-  { id: 3, name: 'File 3', folderId: 2 }
-];

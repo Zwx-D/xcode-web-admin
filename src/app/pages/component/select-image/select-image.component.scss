@@ -77,9 +77,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 3px;
 }
 
 .image-name {
   text-align: center;
   margin-top: 5px;
-}    
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-container:hover {
+  // border: 1px solid black;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}

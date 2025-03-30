@@ -15,7 +15,7 @@ import { TokenInterceptor } from './pages/services/token.interceptor';
 import { LoginService } from './pages/services/login.service';
 import { ListComponentModule } from './pages/component/list/list.component.module';
 import { ModalFormModule } from './pages/component/modal-form/modal-form.module';
-import { UploadService } from './pages/services/files.service';
+import { FilesService } from './pages/services/files.service';
 import { SelectImageModule } from './pages/component/select-image/select-image.module';
 
 
@@ -50,7 +50,7 @@ registerLocaleData(zh);
     },
     LoginService,
     NzModalService,
-    UploadService],
+    FilesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

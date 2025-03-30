@@ -1,8 +1,9 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ProjectService } from "./project.serivce";
-import { CarouselVM, CommonResponse } from "../type/list.response.module";
+import { CarouselVM, CommonResponse } from "../type/list.module";
 import { map } from "rxjs/operators";
+import { FilesService } from "./files.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +11,9 @@ import { map } from "rxjs/operators";
 export class CarouselService {
 
     private listUrl = '/api/carouselImage';
+    private createUrl = '/api/carouselImage';
 
-    constructor(private http: HttpClient, private projectService: ProjectService) {
+    constructor(private http: HttpClient, private projectService: ProjectService, private filesService: FilesService) {
     }
 
     getCarouselList(): Promise<CommonResponse<CarouselVM>> {
@@ -28,6 +30,13 @@ export class CarouselService {
     }
 
     transformCarouselsToVMs(vms: CarouselVM[]) {
+        vms.forEach(item => {
+            item.linkUrl = this.filesService.previewImg(item.imageUuid);
+        })
         return vms;
+    }
+
+    createCarousel(data: CarouselVM): Promise<CarouselVM> {
+        return this.http.post<CarouselVM>(this.projectService.getBackendConfig().baseUrl + this.listUrl, data).toPromise();
     }
 }
