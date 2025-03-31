@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BackendConfig } from "../type/main/config.module";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "src/environments/environment";
+import { ListQueryParams } from "../type/list.module";
 
 @Injectable({
     providedIn: 'root'
@@ -30,6 +31,20 @@ export class ProjectService {
 
     public changeMeun() {
 
+
+    }
+
+    public buildHttpParams(queryParams: ListQueryParams): HttpParams {
+        const { page = 0, size = 10, ...params } = queryParams;
+        let httpParams = new HttpParams()
+            .set('page', page.toString())
+            .set('size', size.toString());
+        Object.keys(params).forEach(key => {
+            if (params[key] !== undefined && params[key] !== null) {
+                httpParams = httpParams.set(key, params[key]);
+            }
+        });
+        return httpParams;
     }
 
 }

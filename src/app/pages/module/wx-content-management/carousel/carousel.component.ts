@@ -4,7 +4,8 @@ import { NzModalService } from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { ModalFormComponent } from 'src/app/pages/component/modal-form/modal-form.component';
 import { CarouselService } from 'src/app/pages/services/carousel.service';
-import { ButtonConfig, CarouselVM, ColumnConfig, CommonResponse, ModalFormItem } from 'src/app/pages/type/list.module';
+import { FilesService } from 'src/app/pages/services/files.service';
+import { ButtonConfig, CarouselVM, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem } from 'src/app/pages/type/list.module';
 
 @Component({
   selector: 'app-carousel',
@@ -13,12 +14,34 @@ import { ButtonConfig, CarouselVM, ColumnConfig, CommonResponse, ModalFormItem }
 })
 export class CarouselComponent implements OnInit {
 
+  queryFilter: ListQueryParams = {
+    page: 0,
+    size: 10
+  };
   btnConfig: ButtonConfig[] = [
     {
       label: '新建',
       type: 'primary',
       event: () => {
         this.createCarousel();
+      }
+    },
+    {
+      label: '刷新',
+      type: 'default',
+      event: () => {
+        this.loadData(this.queryFilter);
+      }
+    },
+    {
+      label: '重置',
+      type: 'default',
+      event: () => {
+        this.queryFilter = {
+          page: 0,
+          size: 10
+        }
+        this.loadData(this.queryFilter);
       }
     }
   ];
@@ -28,26 +51,58 @@ export class CarouselComponent implements OnInit {
       name: 'id',
       selectType: 'input',
       label: 'ID',
-      enableSelect: true
+      enableSelect: true,
+      canSort: true,
+      width: 10
     }, {
       name: 'linkUrl',
       label: '缩略图',
-      isImg: true
+      isImg: true,
+      width: 12
     }, {
-      name: 'imageUuid',
+      name: 'isShowTxt',
       selectType: 'input',
-      label: 'imageUuid',
-      enableSelect: true
-    }, {
-      name: 'linkUrl',
-      selectType: 'input',
-      label: '链接',
-      enableSelect: true
+      label: '是否展示',
+      enableSelect: true,
+      canSort: true,
+      width: 13
     }, {
       name: 'sortOrder',
       selectType: 'input',
       label: '排序',
-      enableSelect: true
+      enableSelect: true,
+      canSort: true,
+      width: 10
+    }, {
+      name: 'btn',
+      label: '操作',
+      isBtn: true,
+      btnConfig: [
+        {
+          label: '预览',
+          event: (event) => {
+            this.filesService.previewImage(event.imageUuid);
+          }
+        }, {
+          label: '更改展示状态',
+          type: 'primary',
+          event: (event) => {
+            this.service.updateIshow(event).then(res => {
+              this.loadData(this.queryFilter);
+            });
+          }
+        },
+        {
+          label: '删除',
+          type: 'danger',
+          event: (event) => {
+            this.service.deleteCarousel(event.uuid).then(res => {
+              this.loadData(this.queryFilter);
+            });
+          }
+        }
+      ],
+      width: 50
     }
   ];
   pageIndex = 1;
@@ -57,16 +112,16 @@ export class CarouselComponent implements OnInit {
   total = this.dataSet.length;
   pageSizeOptions = [10, 20, 30];
   carouselDataSubject = new BehaviorSubject<CommonResponse<CarouselVM>>({ data: [], total: 0 });
-  loadData = () => {
-    this.service.getCarouselList().then(res => {
-      console.log(res);
-      this.carouselDataSubject.next(res);
-    })
-  }
 
-  constructor(private service: CarouselService, private modalService: NzModalService) { }
+  constructor(private service: CarouselService, private modalService: NzModalService, private filesService: FilesService) { }
 
   ngOnInit() {
+  }
+
+  loadData = (queryFilter: ListQueryParams) => {
+    this.service.getCarouselList(queryFilter).then(res => {
+      this.carouselDataSubject.next(res);
+    })
   }
 
   createCarousel() {
@@ -108,13 +163,15 @@ export class CarouselComponent implements OnInit {
 
   onConfirm(data: { imageUuid: string, sortOrder: number }) {
     const req: CarouselVM = {
+      uuid: null,
       id: null,
       imageUuid: data.imageUuid,
       linkUrl: data.imageUuid,
-      sortOrder: data.sortOrder
+      sortOrder: data.sortOrder,
+      isShow: true
     };
     this.service.createCarousel(req).then(res => {
-      this.loadData();
+      this.loadData(this.queryFilter);
     });
   }
 

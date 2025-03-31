@@ -4,6 +4,7 @@ import { ProjectService } from "./project.serivce";
 import { FileInfoVM, Files, FolderVM } from "../type/files.type";
 import { CommonResponse, ListQueryParams } from "../type/list.module";
 import { map } from "rxjs/operators";
+import { NzModalService } from "ng-zorro-antd";
 
 const filesUrl = '/api/files/';
 @Injectable({
@@ -17,7 +18,7 @@ export class FilesService {
     private getFilesUrl = filesUrl + 'findFileInfoByCriteria';
 
 
-    constructor(private http: HttpClient, private projectService: ProjectService) { }
+    constructor(private http: HttpClient, private projectService: ProjectService, private modal: NzModalService) { }
 
     uploadFile(file: File): Promise<Files> {
         const formData = new FormData();
@@ -88,6 +89,21 @@ export class FilesService {
         });
 
         return httpParams;
+    }
+
+
+    previewImage(imageUrl: string): void {
+        this.modal.create({
+            nzContent: `<img 
+          src="${this.previewImg(imageUrl)}" 
+          style="width: 100%;"
+          />`,
+            nzFooter: null, // 不显示底部按钮
+            nzWidth: '80%', // 调整放大图片的大小
+            nzClosable: true, // 关闭按钮在内容区域，不显示默认关闭按钮
+            nzMaskClosable: true, // 点击遮罩可关闭
+            nzBodyStyle: { padding: '0', textAlign: 'center' }
+        });
     }
 
 }

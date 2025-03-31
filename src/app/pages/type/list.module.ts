@@ -43,11 +43,16 @@ export type ColummConfig = InputColummConfig | SelectColummConfig | DateColummCo
 export interface ColumnConfig {
     name: string;
     label: string;
+    width?: number;
     enableSelect?: boolean;
     selectType?: string;
+    selectValue?: string;
     errorTip?: string;
     placeholder?: string;
     isImg?: boolean;
+    canSort?: boolean;
+    isBtn?: boolean;
+    btnConfig?: ButtonConfig[];
 }
 
 export class SelectOpt {
@@ -62,7 +67,7 @@ export class ButtonConfig {
     disabled?: boolean = false;
     type?: string = 'primary';
     shape?: string;
-    event: () => void
+    event: (event) => void
 }
 
 type InputType = 'text' | 'number' | 'datepicker' | 'checkbox' | 'switch' | 'upload';
@@ -91,10 +96,25 @@ export interface UserVM {
 
 // 轮播图列表视图模型
 export interface CarouselVM {
+    uuid: string;
     id: number;
     imageUuid: string;
     linkUrl: string;
     sortOrder: number;
+    isShow: boolean;
+    isShowTxt?: String;
+}
+
+// 摄影作品展示列表视图模型
+export interface PhotographyVM {
+    uuid: string;
+    id: number;
+    imageUuid: string;
+    linkUrl: string;
+    sortOrder: number;
+    desc: string;
+    isShow: boolean;
+    isShowTxt?: String;
 }
 
 

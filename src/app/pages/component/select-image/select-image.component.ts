@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { FilesService } from '../../services/files.service';
 import { ListQueryParams } from '../../type/list.module';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FileInfoVM } from '../../type/files.type';
 
 @Component({
   selector: 'app-select-image',
@@ -9,7 +11,7 @@ import { ListQueryParams } from '../../type/list.module';
   styleUrls: ['./select-image.component.scss']
 })
 export class SelectImageComponent implements OnInit {
-
+  queryForm: FormGroup;
   folderFilter = '';
   fileNameFilter = '';
   currentPage = 1;
@@ -18,10 +20,18 @@ export class SelectImageComponent implements OnInit {
   currentFolderId: string | null = null;
   items: any[] = [];
   pageTotal: number = 0;
-  constructor(private message: NzMessageService, private filesService: FilesService, private modal: NzModalService) { }
+  selectedItem: FileInfoVM | null = null;
+  constructor(private message: NzMessageService,
+    private filesService: FilesService,
+    private modal: NzModalService,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.loadFolders();
+    this.queryForm = this.fb.group({
+      folderFilter: [null],
+      fileNameFilter: [null]
+    });
   }
 
   loadFolders(): void {
@@ -39,7 +49,6 @@ export class SelectImageComponent implements OnInit {
       size: 10,
       "folderUuid.equals": folderId
     };
-    // this.items = mockFiles.filter(file => file.folderId === folderId);
     this.filesService.getFiles(queryParams).then(res => {
       this.items = res.data;
       this.pageTotal = res.total;
@@ -87,26 +96,21 @@ export class SelectImageComponent implements OnInit {
     });
   }
 
-  previewFile(file: any): void {
-    console.log('Preview file:', file);
+  selectImage(data: FileInfoVM) {
+    if (this.selectedItem === data) {
+      this.selectedItem = null;
+    } else {
+      this.selectedItem = data;
+    }
   }
 
-  downloadFile(file: any): void {
-    console.log('Download file:', file);
-  }
-
-  deleteFile(file: any): void {
-    console.log('Delete file:', file);
+  deleteImage(data: FileInfoVM) {
+    console.log(data);
   }
 
   goBack(): void {
     this.loadFolders();
   }
-
-  test(data) {
-    console.log(data);
-  }
-
 
 }
 

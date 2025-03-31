@@ -1,26 +1,57 @@
-<div nz-row style="margin-bottom: 10px;" [nzJustify]="justify" [nzAlign]="align">
-    <div nz-col *ngFor="let item of btnConfig">
-        <button nz-button [nzType]="item.type" (click)="item.event()" [nzType]="item.type" [nzShape]="item.shape"
-            [disabled]="item.disabled">
-            <i nz-icon *ngIf="item.icon" [nzType]="item.icon"></i>
-            {{item.label}}
-        </button>
-    </div>
-</div>
+<form nz-form [nzLayout]="'inline'" [formGroup]="selectData">
+    <nz-form-item *ngFor="let item of btnConfig">
+        <nz-form-control>
+            <button nz-button [nzType]="item.type" (click)="item.event()" [nzType]="item.type" [nzShape]="item.shape"
+                [disabled]="item.disabled">
+                <i nz-icon *ngIf="item.icon" [nzType]="item.icon"></i>
+                {{item.label}}
+            </button>
+        </nz-form-control>
+    </nz-form-item>
+</form>
+
+
 <div nz-row>
     <nz-table #outBordered nzOuterBordered [nzData]="dataSet" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
-        [nzShowPagination]="showPagination" [nzLoading]="loading" [nzTotal]="total"
-        [nzPageSizeOptions]="pageSizeOptions" >
+        [nzShowPagination]="showPagination" [nzLoading]="loading" [nzTotal]="total" nzFrontPagination="false"
+        nzShowQuickJumper="true" (nzPageIndexChange)="changePage($event)" [nzPageSizeOptions]="pageSizeOptions"
+        [nzScroll]="{ y: '400px' }">
         <thead>
             <tr>
-                <th *ngFor="let item of columnConfig" >{{item.label}}</th>
+                <th *ngFor="let item of columnConfig" [nzShowSort]="item.canSort"
+                    [nzWidth]="item.width?item.width+'%':'10%'" nzAlign="left">
+                    <i *ngIf="item.enableSelect" nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown
+                        #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="menu"
+                        [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight"
+                        [nzClickHide]="false" nzTableFilter></i>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <div class="search-box">
+                            <input type="text" nz-input
+                                [placeholder]="item.placeholder?item.placeholder:'请输入'+item.label"
+                                [(ngModel)]="item.selectValue" />
+                            <button nz-button nzSize="small" nzType="primary" class="search-button"
+                                (click)="search(item)">
+                                搜索
+                            </button>
+                            <button nz-button nzSize="small" (click)="reset(item)">重置</button>
+                        </div>
+                    </nz-dropdown-menu>
+                    {{item.label}}
+                </th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let data of outBordered.data">
-                <td *ngFor="let item of columnConfig" >
+                <td *ngFor="let item of columnConfig" nzAlign="left">
                     <img *ngIf="item.isImg" [src]="data[item.name]" style="width: 50px;height: 50px;">
-                    <span *ngIf="!item.isImg" nz-tooltip [nzTooltipTitle]="data[item.name]" class="columnText">{{ data[item.name] }}</span>
+                    <span *ngIf="!item.isImg && !item.isBtn" nz-tooltip [nzTooltipTitle]="data[item.name]"
+                        class="columnText">{{ data[item.name] }}</span>
+                    <button *ngFor="let btnItem of item.btnConfig" nz-button [nzType]="btnItem.type"
+                        (click)="btnItem.event(data)" [nzType]="btnItem.type" [nzShape]="btnItem.shape"
+                        [disabled]="btnItem.disabled" style="margin-right: 2px;">
+                        <i nz-icon *ngIf="btnItem.icon" [nzType]="btnItem.icon"></i>
+                        {{btnItem.label}}
+                    </button>
                 </td>
             </tr>
         </tbody>

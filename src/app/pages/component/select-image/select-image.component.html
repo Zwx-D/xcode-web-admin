@@ -1,28 +1,35 @@
 <div>
-  <div nz-row [nzGutter]="36" style="margin-bottom: 10px;">
-    <div nz-col [nzSpan]="6">
-      <input nz-input placeholder="文件夹筛选" [(ngModel)]="folderFilter" [disabled]="isShowingFiles || fileNameFilter" />
-    </div>
-    <div nz-col [nzSpan]="6">
-      <input nz-input placeholder="文件名筛选" [(ngModel)]="fileNameFilter" [disabled]="!isShowingFiles || folderFilter" />
-    </div>
-    <div nz-col [nzSpan]="3">
-      <button nz-button (click)="resetFilters()">重置条件</button>
-    </div>
-    <div nz-col [nzSpan]="3">
-      <button nz-button nzType="primary" (click)="filterItems()">筛选</button>
-    </div>
-    <div nz-col [nzSpan]="3">
-      <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
-    </div>
-  </div>
-  <!-- <div class="filter-row">
-    <input nz-input placeholder="文件夹筛选" [(ngModel)]="folderFilter" [disabled]="isShowingFiles || fileNameFilter" />
-    <input nz-input placeholder="文件名筛选" [(ngModel)]="fileNameFilter" [disabled]="!isShowingFiles || folderFilter" />
-    <button nz-button (click)="resetFilters()">重置条件</button>
-    <button nz-button nzType="primary" (click)="filterItems()">筛选</button>
-    <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
-  </div> -->
+  <form nz-form [nzLayout]="'inline'" [formGroup]="queryForm" style="margin-bottom: 10px;">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group>
+          <input formControlName="folderFilter" nz-input placeholder="文件夹筛选" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group>
+          <input formControlName="fileNameFilter" nz-input placeholder="文件夹筛选" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button (click)="resetFilters()">重置条件</button>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button nzType="primary" (click)="filterItems()">筛选</button>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <button *ngIf="isShowingFiles" nz-button class="back-button" (click)="goBack()">返回</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
 
   <div nz-row *ngIf="!isShowingFiles">
     <div nz-col [nzSpan]="3" *ngFor="let item of items">
@@ -35,35 +42,19 @@
 
   <div nz-row *ngIf="isShowingFiles">
     <div nz-col [nzSpan]="3" *ngFor="let item of items">
-      <div class="image-container" nz-popover [nzPopoverContent]="contentTemplate"  nzPopoverTrigger="hover" >
+      <div class="image-container" [ngClass]="{ 'selected': selectedItem && selectedItem === item }">
         <img [src]="item.filePath" class="responsive-image" (click)="previewImage(item.filePath)" />
         <span nz-tooltip [nzTooltipTitle]="item.name" class="image-name">{{item.name}}</span>
+        <div class="overlay">
+          <div class="button-container">
+            <button nz-button nzType="primary" (click)="previewImage(item.filePath)">预览</button>
+            <button nz-button nzType="default" (click)="selectImage(item)">选中</button>
+            <button nz-button nzType="danger" (click)="deleteImage(item)">删除</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-
-
-  <!-- <div class="item-list">
-    <div *ngFor="let item of items" class="item">
-      <div *ngIf="!isShowingFiles" (click)="loadFiles(item.id)">
-        <img src="assets/image/file_folder.png" alt="Folder" />
-        <span class="item-name">{{ item.name }}</span>
-      </div>
-      <div *ngIf="isShowingFiles">
-        <div class="file-icon">
-          <img src="assets/image/file_folder.png" alt="File" />
-          <label nz-checkbox></label>
-          <div class="file-actions">
-            <button nz-button nzType="link" (click)="previewFile(item)">预览</button>
-            <button nz-button nzType="link" (click)="downloadFile(item)">下载</button>
-            <button nz-button nzType="link" (click)="deleteFile(item)">删除</button>
-          </div>
-        </div>
-        <span class="item-name">{{ item.name }}</span>
-      </div>
-    </div>
-  </div>-->
 
   <div nz-row>
     <div nz-col>
@@ -71,19 +62,3 @@
     </div>
   </div>
 </div>
-
-
-<ng-template #contentTemplate let-item="item">
-  <div nz-row>
-    <div nz-col>
-      <button nz-button (click)="test(item)">
-        预览
-      </button>
-    </div>
-    <div nz-col>
-      <button nz-button (click)="test(item)">
-        选中
-      </button>
-    </div>
-  </div>
-</ng-template>

@@ -72,15 +72,19 @@ export class ModalFormComponent implements OnInit {
   };
 
   selectImage(key: string) {
-
     console.log(key);
     this.modalService.create({
       nzTitle: '选择图片',
       nzContent: SelectImageComponent,
       nzComponentParams: {},
       nzWidth: '80%',
-      nzOnOk: () => new Promise((resolve) => {
-      }),
+      nzOnOk: (data) => {
+        console.log(data);
+        if (data.selectedItem) {
+          this.avatarUrl = this.uploadService.previewImg(data.selectedItem.uuid);
+          this.form.get(key).setValue(data.selectedItem.uuid);
+        }
+      },
       nzOnCancel: () => {
         this.onCancel();
       }

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
-import { NzButtonModule, NzFormModule, NzGridModule, NzIconModule, NzInputModule, NzLayoutModule, NzTableModule, NzToolTipModule } from "ng-zorro-antd";
-import { ReactiveFormsModule } from "@angular/forms";
+import { NzButtonModule, NzDropDownModule, NzFormModule, NzGridModule, NzIconModule, NzInputModule, NzLayoutModule, NzTableModule, NzToolTipModule } from "ng-zorro-antd";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ListComponent } from "./list.component";
 
@@ -15,7 +15,9 @@ import { ListComponent } from "./list.component";
         ReactiveFormsModule,
         NzButtonModule,
         NzIconModule,
-        NzToolTipModule
+        NzToolTipModule,
+        NzDropDownModule,
+        FormsModule
     ],
     declarations: [ListComponent],
     exports: [ListComponent]

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ButtonConfig, ColumnConfig, CommonResponse, SelectConfig } from '../../type/list.module';
+import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, SelectConfig } from '../../type/list.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-
   align = 'bottom';
   justify = 'end';
   selectData!: FormGroup;
@@ -24,15 +23,15 @@ export class ListComponent implements OnInit {
   @Input() loading = false;
   @Input() total = 0;
   @Input() pageSizeOptions = [10, 20, 30];
-  @Input() loadData: () => void;
+  @Input() loadData: (queryFilter: ListQueryParams) => void;
   @Input() dataSource: Observable<CommonResponse<any>>;
-
+  @Input() queryFilter: ListQueryParams | null = null;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.initSelectForm();
     if (this.loadData) {
-      this.loadData();
+      this.loadData(this.queryFilter);
     }
     if (this.dataSource) {
       this.dataSource.subscribe((data) => {
@@ -56,6 +55,33 @@ export class ListComponent implements OnInit {
         });
       }
     });
+  }
+
+  changePage(event) {
+    this.queryFilter.page = event - 1;
+    this.loadData(this.queryFilter);
+  }
+
+  search(event: ColumnConfig) {
+    this.queryFilter = {
+      ...this.queryFilter,
+      ...this.convertColumnConfigSelectVlaue(event)
+    }
+    this.loadData(this.queryFilter);
+  }
+
+  reset(event: ColumnConfig) {
+    event.selectValue = null;
+    delete this.queryFilter[`${event.name}.equals`];
+    console.log(this.queryFilter);
+    this.loadData(this.queryFilter);
+  }
+
+  convertColumnConfigSelectVlaue(config: ColumnConfig) {
+    const key = `${config.name}.equals`;
+    const result: { [key: string]: any } = {};
+    result[key] = config.selectValue;
+    return result;
   }
 
 }

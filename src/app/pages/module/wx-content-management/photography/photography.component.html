@@ -1,1 +1,5 @@
-<p>photography works!</p>
+<app-list [loadData]="loadData" [dataSet]="dataSet" [columnConfig]="columnConfig" [pageIndex]="pageIndex"
+    [pageSize]="pageSize" [showPagination]="showPagination" [loading]="loading" [total]="total"
+    [pageSizeOptions]="pageSizeOptions" [dataSource]="carouselDataSubject.asObservable()" [btnConfig]="btnConfig"
+    [queryFilter]="queryFilter">
+</app-list>
