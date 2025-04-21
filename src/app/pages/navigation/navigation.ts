@@ -13,10 +13,28 @@ export const navigation: MenuNavigation[] = [
                 url: "carousel"
             },
             {
-                title: "摄影作品展示",
+                title: "首页功能",
+                icon: "",
+                type: "item",
+                url: "wxHomeFunction"
+            },
+            {
+                title: "摄影作者介绍",
+                icon: "",
+                type: "item",
+                url: "photographer"
+            },
+            {
+                title: "首页摄影作品展示",
                 icon: "",
                 type: "item",
                 url: "photography"
+            },
+            {
+                title: "摄影作品集",
+                icon: "",
+                type: "item",
+                url: "portfolio"
             }
         ]
     },

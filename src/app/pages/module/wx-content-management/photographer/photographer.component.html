@@ -1,0 +1,38 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="4">名称</nz-form-label>
+        <nz-form-control [nzSpan]="8">
+            <input type="text" nz-input formControlName="name" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="4">头像</nz-form-label>
+        <nz-form-control [nzSpan]="8">
+
+            <nz-upload class="avatar-uploader" [nzAction]="uploadUrl" nzName="头像" nzListType="picture-card"
+                [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload" [nzSize]="uploadSize" [nzLimit]="uploadLimit"
+                [nzCustomRequest]="uploadImg">
+                <ng-container *ngIf="!avatarUrl">
+                    <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                    <div class="ant-upload-text">头像</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+            </nz-upload>
+            <button nz-button nzType="primary" (click)="selectImage()">
+                从历史中选取
+            </button>
+
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="4">介绍</nz-form-label>
+        <nz-form-control [nzSpan]="8">
+            <textarea nzMaxCharacterCount="200" [nzAutosize]="textareaSize" nz-input formControlName="desc"></textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control [nzSpan]="8" [nzOffset]="4">
+            <button nz-button nzType="primary">保存</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

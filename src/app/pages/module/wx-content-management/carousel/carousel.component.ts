@@ -168,7 +168,7 @@ export class CarouselComponent implements OnInit {
       imageUuid: data.imageUuid,
       linkUrl: data.imageUuid,
       sortOrder: data.sortOrder,
-      isShow: true
+      isShow: false
     };
     this.service.createCarousel(req).then(res => {
       this.loadData(this.queryFilter);

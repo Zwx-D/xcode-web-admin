@@ -2,14 +2,14 @@ import { NgModule } from "@angular/core";
 import { NzButtonModule, NzFormModule, NzGridModule, NzIconModule, NzInputModule, NzLayoutModule, NzTableModule } from "ng-zorro-antd";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { WxAccountComponent } from "./wx-account.component";
-import { WxAccountRoutingModule } from "./wx-account-routing.module";
+import { FunctionRoutingModule } from "./function-routing.module";
+import { FunctionComponent } from "./function.component";
 import { ListComponentModule } from "src/app/pages/component/list/list.component.module";
-import { WxAccountService } from "src/app/pages/services/wx-account.service";
+import { FunctionService } from "src/app/pages/services/function.service";
 
 @NgModule({
     imports: [
-        WxAccountRoutingModule,
+        FunctionRoutingModule,
         NzLayoutModule,
         NzTableModule,
         NzGridModule,
@@ -21,8 +21,8 @@ import { WxAccountService } from "src/app/pages/services/wx-account.service";
         NzIconModule,
         ListComponentModule
     ],
-    declarations: [WxAccountComponent],
-    exports: [WxAccountComponent],
-    providers: [WxAccountService]
+    declarations: [FunctionComponent],
+    exports: [FunctionComponent],
+    providers: [FunctionService]
 })
-export class WxAccountModule { }
+export class FunctionModule { }

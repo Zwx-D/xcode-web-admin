@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { ModalFormComponent } from 'src/app/pages/component/modal-form/modal-form.component';
 import { FilesService } from 'src/app/pages/services/files.service';
-import { PhotographyService } from 'src/app/pages/services/photography.service';
-import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PhotographyVM } from 'src/app/pages/type/list.module';
+import { PortfolioService } from 'src/app/pages/services/portfolio.service';
+import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PortfolioVM } from 'src/app/pages/type/list.module';
 
 @Component({
-  selector: 'app-photography',
-  templateUrl: './photography.component.html',
-  styleUrls: ['./photography.component.scss']
+  selector: 'app-portfolio',
+  templateUrl: './portfolio.component.html',
+  styleUrls: ['./portfolio.component.scss']
 })
-export class PhotographyComponent implements OnInit {
+export class PortfolioComponent implements OnInit {
 
   queryFilter: ListQueryParams = {
     page: 0,
@@ -23,7 +24,7 @@ export class PhotographyComponent implements OnInit {
       label: '新建',
       type: 'primary',
       event: () => {
-        this.creategetPhotography();
+        this.createPortfolio();
       }
     },
     {
@@ -56,56 +57,57 @@ export class PhotographyComponent implements OnInit {
       width: 10
     }, {
       name: 'linkUrl',
-      label: '缩略图',
+      label: '封面',
       isImg: true,
       width: 12
     }, {
+      name: 'name',
+      label: '名称',
+      isImg: false,
+      width: 15
+    }, {
       name: 'isShowTxt',
       selectType: 'input',
-      label: '是否展示',
+      label: '展示否',
       enableSelect: true,
       canSort: true,
-      width: 13
-    }, {
-      name: 'desc',
-      selectType: 'input',
-      label: '备注',
-      enableSelect: true,
-      canSort: true,
-      width: 13
+      width: 15
     }, {
       name: 'sortOrder',
       selectType: 'input',
       label: '排序',
       enableSelect: true,
       canSort: true,
-      width: 10
+      width: 15
     }, {
       name: 'btn',
       label: '操作',
       isBtn: true,
       btnConfig: [
         {
-          label: '预览',
+          label: '详情',
           event: (event) => {
-            this.filesService.previewImage(event.imageUuid);
+            this.route.navigate(['/portfolio/detail'], {
+              state: { data: event }
+            });
+
           }
         }, {
-          label: '更改展示状态',
+          label: '展示否',
           type: 'primary',
           event: (event) => {
-            this.service.updateIshow(event).then(res => {
-              this.loadData(this.queryFilter);
-            });
+            // this.service.updateIshow(event).then(res => {
+            //   this.loadData(this.queryFilter);
+            // });
           }
         },
         {
           label: '删除',
           type: 'danger',
           event: (event) => {
-            this.service.deletePhotography(event.uuid).then(res => {
-              this.loadData(this.queryFilter);
-            });
+            // this.service.deleteCarousel(event.uuid).then(res => {
+            //   this.loadData(this.queryFilter);
+            // });
           }
         }
       ],
@@ -118,30 +120,36 @@ export class PhotographyComponent implements OnInit {
   loading = false;
   total = this.dataSet.length;
   pageSizeOptions = [10, 20, 30];
-  carouselDataSubject = new BehaviorSubject<CommonResponse<PhotographyVM>>({ data: [], total: 0 });
+  carouselDataSubject = new BehaviorSubject<CommonResponse<PortfolioVM>>({ data: [], total: 0 });
 
-
-  constructor(private service: PhotographyService, private modalService: NzModalService, private filesService: FilesService) { }
+  constructor(private service: PortfolioService,
+    private modalService: NzModalService,
+    private filesService: FilesService,
+    private route: Router) { }
 
   ngOnInit() {
   }
 
-
   loadData = (queryFilter: ListQueryParams) => {
-    this.service.getPhotographyList(queryFilter).then(res => {
+    this.service.getList(queryFilter).then(res => {
       this.carouselDataSubject.next(res);
     })
   }
 
-  creategetPhotography() {
+  createPortfolio() {
     const formConfig: ModalFormItem[] = [
+      {
+        "key": "name",
+        "label": "作品名称",
+        "type": "text",
+        "vali": Validators.required
+      },
       {
         "key": "imageUuid",
         "label": "请选择图片",
         "type": "upload",
         "vali": Validators.required
-      },
-      {
+      }, {
         "key": "desc",
         "label": "备注",
         "type": "text"
@@ -152,10 +160,11 @@ export class PhotographyComponent implements OnInit {
         "type": "number",
         "vali": Validators.required
       }
+
     ]
 
     const modal = this.modalService.create({
-      nzTitle: '新建摄影作品展示',
+      nzTitle: '新建轮播图',
       nzContent: ModalFormComponent,
       nzComponentParams: {
         formConfig: formConfig
@@ -175,18 +184,19 @@ export class PhotographyComponent implements OnInit {
     });
   }
 
-
-  onConfirm(data: { imageUuid: string, sortOrder: number, desc: string }) {
-    const req: PhotographyVM = {
+  onConfirm(data: { imageUuid: string, sortOrder: number, name: string, desc: string }) {
+    console.log(data);
+    const req: PortfolioVM = {
       uuid: null,
       id: null,
       imageUuid: data.imageUuid,
       linkUrl: data.imageUuid,
       sortOrder: data.sortOrder,
-      isShow: true,
-      desc: data.desc
+      isShow: false,
+      name: data.name,
+      desc: data.desc ? data.desc : null
     };
-    this.service.createPhotography(req).then(res => {
+    this.service.createPortfolio(req).then(res => {
       this.loadData(this.queryFilter);
     });
   }
@@ -194,4 +204,5 @@ export class PhotographyComponent implements OnInit {
   onCancel() {
     console.log('取消操作');
   }
+
 }

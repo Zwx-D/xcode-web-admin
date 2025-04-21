@@ -93,6 +93,19 @@ export interface UserVM {
     lastModifiedBy: string;
 }
 
+// 用户列表视图模型
+export interface WechatUserVM {
+    id: number;
+    nickName: string;
+    openId: string;
+    unionId: string;
+    lastLoginTime: string;
+    loginIp: string;
+    os: string;
+    lastModifiedTime: string;
+    lastModifiedBy: string;
+}
+
 
 // 轮播图列表视图模型
 export interface CarouselVM {
@@ -113,6 +126,44 @@ export interface PhotographyVM {
     linkUrl: string;
     sortOrder: number;
     desc: string;
+    isShow: boolean;
+    isShowTxt?: String;
+}
+
+// 摄影作品集列表视图模型
+export interface PortfolioVM {
+    uuid: string;
+    id: number;
+    name: string;
+    imageUuid: string;
+    linkUrl: string;
+    sortOrder: number;
+    desc: string;
+    isShow: boolean;
+    isShowTxt?: String;
+}
+
+// 摄影作品集详情中的作品项列表视图模型
+export interface PortfolioItemVM {
+    uuid: string;
+    id: number;
+    name: string;
+    imageUuid: string;
+    linkUrl: string;
+    sortOrder: number;
+    desc: string;
+    isShow: boolean;
+    isShowTxt?: String;
+}
+
+export interface FunctionVM {
+    uuid: string;
+    id: number;
+    imageUuid: string;
+    linkUrl: string;
+    sortOrder: number;
+    desc: string;
+    route: string;
     isShow: boolean;
     isShowTxt?: String;
 }

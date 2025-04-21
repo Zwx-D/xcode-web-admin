@@ -1,0 +1,92 @@
+<div nz-row nzType="flex" nzJustify="end" *ngIf="!inEdit">
+    <div nz-col nzPull="1">
+        <button nz-button nzType="primary" (click)="edit()">编辑</button>
+    </div>
+    <div nz-col>
+        <button nz-button nzType="default" (click)="return()">返回</button>
+    </div>
+</div>
+
+<div nz-row nzType="flex" nzJustify="end" *ngIf="inEdit">
+    <div nz-col nzPull="1">
+        <button nz-button nzType="primary" (click)="save()">保存</button>
+    </div>
+    <div nz-col>
+        <button nz-button nzType="default" (click)="cancelEdit()">取消</button>
+    </div>
+</div>
+
+
+
+<div>
+
+    <div nz-row>
+
+        <div nz-col nzSpan="12">
+            <form nz-form [formGroup]="formData">
+                <nz-form-item>
+                    <nz-form-label nzSpan="8">作品集名称</nz-form-label>
+                    <nz-form-control nzSpan="12">
+                        <input nz-input formControlName="name" [disabled]="!inEdit" />
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzSpan="8">排序</nz-form-label>
+                    <nz-form-control nzSpan="12">
+                        <nz-input-number formControlName="sortOrder" [nzMin]="1" [nzMax]="100" [nzStep]="1"
+                            [nzDisabled]="!inEdit"></nz-input-number>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzSpan="8">是否展示</nz-form-label>
+                    <nz-form-control nzSpan="12">
+                        <nz-switch [nzDisabled]="!inEdit" formControlName="isShow" nzCheckedChildren="是"
+                            nzUnCheckedChildren="否"></nz-switch>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzSpan="8">封面</nz-form-label>
+                    <nz-form-control nzSpan="12">
+
+                        <nz-upload [nzDisabled]="!inEdit" class="avatar-uploader" [nzAction]="uploadUrl" nzName="头像"
+                            nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"
+                            [nzSize]="uploadSize" [nzLimit]="uploadLimit" [nzCustomRequest]="uploadImg">
+                            <ng-container *ngIf="!avatarUrl">
+                                <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                                <div class="ant-upload-text">封面</div>
+                            </ng-container>
+                            <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                        </nz-upload>
+                        <button nz-button nzType="primary" (click)="selectImage()" [disabled]="!inEdit">
+                            从历史中选取
+                        </button>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzSpan="8">备注</nz-form-label>
+                    <nz-form-control nzSpan="12">
+                        <textarea nzMaxCharacterCount="200" [nzAutosize]="textareaSize" nz-input formControlName="desc"
+                            [disabled]="!inEdit"></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </div>
+
+        <div nz-col nzSpan="12">
+
+            <app-list [loadData]="loadData" [dataSet]="dataSet" [columnConfig]="columnConfig" [pageIndex]="pageIndex"
+                [pageSize]="pageSize" [showPagination]="showPagination" [loading]="loading" [total]="total"
+                [pageSizeOptions]="pageSizeOptions" [dataSource]="carouselDataSubject.asObservable()"
+                [btnConfig]="btnConfig" [queryFilter]="queryFilter">
+            </app-list>
+
+
+        </div>
+
+    </div>
+
+</div>

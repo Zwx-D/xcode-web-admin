@@ -4,15 +4,15 @@ import { NzModalService } from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { ModalFormComponent } from 'src/app/pages/component/modal-form/modal-form.component';
 import { FilesService } from 'src/app/pages/services/files.service';
-import { PhotographyService } from 'src/app/pages/services/photography.service';
-import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PhotographyVM } from 'src/app/pages/type/list.module';
+import { FunctionService } from 'src/app/pages/services/function.service';
+import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, FunctionVM } from 'src/app/pages/type/list.module';
 
 @Component({
   selector: 'app-photography',
-  templateUrl: './photography.component.html',
-  styleUrls: ['./photography.component.scss']
+  templateUrl: './function.component.html',
+  styleUrls: ['./function.component.scss']
 })
-export class PhotographyComponent implements OnInit {
+export class FunctionComponent implements OnInit {
 
   queryFilter: ListQueryParams = {
     page: 0,
@@ -23,7 +23,7 @@ export class PhotographyComponent implements OnInit {
       label: '新建',
       type: 'primary',
       event: () => {
-        this.creategetPhotography();
+        this.create();
       }
     },
     {
@@ -67,6 +67,20 @@ export class PhotographyComponent implements OnInit {
       canSort: true,
       width: 13
     }, {
+      name: 'name',
+      selectType: 'input',
+      label: '功能名称',
+      enableSelect: true,
+      canSort: true,
+      width: 13
+    }, {
+      name: 'route',
+      selectType: 'input',
+      label: '路由',
+      enableSelect: true,
+      canSort: true,
+      width: 13
+    }, {
       name: 'desc',
       selectType: 'input',
       label: '备注',
@@ -103,7 +117,7 @@ export class PhotographyComponent implements OnInit {
           label: '删除',
           type: 'danger',
           event: (event) => {
-            this.service.deletePhotography(event.uuid).then(res => {
+            this.service.delete(event.uuid).then(res => {
               this.loadData(this.queryFilter);
             });
           }
@@ -118,27 +132,39 @@ export class PhotographyComponent implements OnInit {
   loading = false;
   total = this.dataSet.length;
   pageSizeOptions = [10, 20, 30];
-  carouselDataSubject = new BehaviorSubject<CommonResponse<PhotographyVM>>({ data: [], total: 0 });
+  carouselDataSubject = new BehaviorSubject<CommonResponse<FunctionVM>>({ data: [], total: 0 });
 
 
-  constructor(private service: PhotographyService, private modalService: NzModalService, private filesService: FilesService) { }
+  constructor(private service: FunctionService, private modalService: NzModalService, private filesService: FilesService) { }
 
   ngOnInit() {
   }
 
 
   loadData = (queryFilter: ListQueryParams) => {
-    this.service.getPhotographyList(queryFilter).then(res => {
+    this.service.getList(queryFilter).then(res => {
       this.carouselDataSubject.next(res);
     })
   }
 
-  creategetPhotography() {
+  create() {
     const formConfig: ModalFormItem[] = [
       {
         "key": "imageUuid",
         "label": "请选择图片",
         "type": "upload",
+        "vali": Validators.required
+      },
+      {
+        "key": "name",
+        "label": "功能名称",
+        "type": "text",
+        "vali": Validators.required
+      },
+      {
+        "key": "route",
+        "label": "路由",
+        "type": "text",
         "vali": Validators.required
       },
       {
@@ -155,7 +181,7 @@ export class PhotographyComponent implements OnInit {
     ]
 
     const modal = this.modalService.create({
-      nzTitle: '新建摄影作品展示',
+      nzTitle: '新建首页功能',
       nzContent: ModalFormComponent,
       nzComponentParams: {
         formConfig: formConfig
@@ -176,17 +202,18 @@ export class PhotographyComponent implements OnInit {
   }
 
 
-  onConfirm(data: { imageUuid: string, sortOrder: number, desc: string }) {
-    const req: PhotographyVM = {
+  onConfirm(data: { imageUuid: string, sortOrder: number, desc: string, route: string }) {
+    const req: FunctionVM = {
       uuid: null,
       id: null,
       imageUuid: data.imageUuid,
       linkUrl: data.imageUuid,
       sortOrder: data.sortOrder,
       isShow: true,
-      desc: data.desc
+      desc: data.desc,
+      route: data.route
     };
-    this.service.createPhotography(req).then(res => {
+    this.service.create(req).then(res => {
       this.loadData(this.queryFilter);
     });
   }
