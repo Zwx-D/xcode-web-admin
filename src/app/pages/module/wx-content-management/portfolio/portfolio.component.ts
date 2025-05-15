@@ -95,19 +95,19 @@ export class PortfolioComponent implements OnInit {
         }, {
           label: '展示否',
           type: 'primary',
-          event: (event) => {
-            // this.service.updateIshow(event).then(res => {
-            //   this.loadData(this.queryFilter);
-            // });
+          event: (event: PortfolioVM) => {
+            this.service.changeIsShow(event.uuid, !event.isShow).then(res => {
+              this.loadData(this.queryFilter);
+            });
           }
         },
         {
           label: '删除',
           type: 'danger',
-          event: (event) => {
-            // this.service.deleteCarousel(event.uuid).then(res => {
-            //   this.loadData(this.queryFilter);
-            // });
+          event: (event: PortfolioVM) => {
+            this.service.delete(event.uuid).then(res => {
+              this.loadData(this.queryFilter);
+            });
           }
         }
       ],

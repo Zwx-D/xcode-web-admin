@@ -1,12 +1,14 @@
 import { Component, EventEmitter, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { NzModalService } from "ng-zorro-antd";
 import { BehaviorSubject } from "rxjs";
+import { ModalFormComponent } from "src/app/pages/component/modal-form/modal-form.component";
 import { SelectImageComponent } from "src/app/pages/component/select-image/select-image.component";
 import { FilesService } from "src/app/pages/services/files.service";
 import { PortfolioService } from "src/app/pages/services/portfolio.service";
-import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, PortfolioItemVM, PortfolioVM } from "src/app/pages/type/list.module";
+import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PortfolioItemVM, PortfolioVM } from "src/app/pages/type/list.module";
+import { CreatePortfolioItemDTO } from "src/app/pages/type/portfolio.type";
 
 
 @Component({
@@ -36,14 +38,14 @@ export class PortfolioDetailComponent implements OnInit {
             label: '新建',
             type: 'primary',
             event: () => {
-                // this.createPortfolio();
+                this.createPortfolioItem();
             }
         },
         {
             label: '刷新',
             type: 'default',
             event: () => {
-                // this.loadData(this.queryFilter);
+                this.loadData(this.queryFilter);
             }
         }
     ];
@@ -57,7 +59,7 @@ export class PortfolioDetailComponent implements OnInit {
         }, {
             name: 'isShowTxt',
             selectType: 'input',
-            label: '是否展示',
+            label: '展示',
             enableSelect: true,
             canSort: true,
             width: 15
@@ -77,18 +79,18 @@ export class PortfolioDetailComponent implements OnInit {
                     label: '更改展示状态',
                     type: 'primary',
                     event: (event) => {
-                        // this.service.updateIshow(event).then(res => {
-                        //   this.loadData(this.queryFilter);
-                        // });
+                        this.service.changeItemIsShow(event.uuid, !event.isShow).then(res => {
+                            this.loadData(this.queryFilter);
+                        });
                     }
                 },
                 {
                     label: '删除',
                     type: 'danger',
                     event: (event) => {
-                        // this.service.deleteCarousel(event.uuid).then(res => {
-                        //   this.loadData(this.queryFilter);
-                        // });
+                        this.service.deletePortfolioItem(event.uuid).then(res => {
+                            this.loadData(this.queryFilter);
+                        });
                     }
                 }
             ],
@@ -127,24 +129,43 @@ export class PortfolioDetailComponent implements OnInit {
     }
 
     loadData = (queryFilter: ListQueryParams) => {
-        this.service.getList(queryFilter).then(res => {
+        const filter: ColumnConfig = {
+            name: "portfolioUuid",
+            selectValue: this.data.uuid
+        }
+        queryFilter = {
+            ...queryFilter,
+            ...this.addDetailUuid(filter)
+        }
+        this.service.getItemList(queryFilter).then(res => {
             this.carouselDataSubject.next(res);
         })
+
     }
+
+    addDetailUuid(config: ColumnConfig) {
+        const key = `${config.name}.equals`;
+        const result: { [key: string]: any } = {};
+        result[key] = config.selectValue;
+        return result;
+    }
+
 
     edit() {
         this.inEdit = true;
     }
+
     return() {
         this.router.navigate(['/portfolio']);
     }
+
     save() {
         this.inEdit = false;
     }
+
     cancelEdit() {
         this.inEdit = false;
     }
-
 
     uploadImg = (item: {
         name: string;
@@ -185,6 +206,64 @@ export class PortfolioDetailComponent implements OnInit {
 
     onCancel() {
         this.cancel.emit();
+    }
+
+    createPortfolioItem() {
+        const formConfig: ModalFormItem[] = [
+            {
+                "key": "imageUuid",
+                "label": "请选择图片",
+                "type": "upload",
+                "vali": Validators.required
+            },
+            {
+                "key": "sortOrder",
+                "label": "顺序",
+                "type": "number",
+                "vali": Validators.required
+            },
+            {
+                "key": "desc",
+                "label": "备注",
+                "type": "text",
+                "vali": Validators.required
+            }
+
+        ]
+
+        const modal = this.modalService.create({
+            nzTitle: '新建',
+            nzContent: ModalFormComponent,
+            nzComponentParams: {
+                formConfig: formConfig
+            },
+            nzOnOk: () => new Promise((resolve) => {
+                const instance = modal.getContentComponent();
+                if (instance.form.valid) {
+                    this.onConfirm(instance.form.value);
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            }),
+            nzOnCancel: () => {
+                this.onCancel();
+            }
+        });
+    }
+
+    onConfirm(data: { imageUuid: string, sortOrder: number, desc: string }) {
+        const req: CreatePortfolioItemDTO = {
+            imageUuid: data.imageUuid,
+            sortOrder: data.sortOrder,
+            isShow: false,
+            name: null,
+            desc: data.desc,
+            portfolioUuid: this.data.uuid
+        };
+        this.service.createPortfolioItem(req).then(res => {
+            this.loadData(this.queryFilter);
+        });
     }
 
 }

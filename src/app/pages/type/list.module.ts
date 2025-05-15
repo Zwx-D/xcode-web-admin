@@ -42,11 +42,11 @@ export type ColummConfig = InputColummConfig | SelectColummConfig | DateColummCo
 // 列配置
 export interface ColumnConfig {
     name: string;
-    label: string;
+    label?: string;
     width?: number;
     enableSelect?: boolean;
     selectType?: string;
-    selectValue?: string;
+    selectValue?: string | number;
     errorTip?: string;
     placeholder?: string;
     isImg?: boolean;
@@ -141,6 +141,7 @@ export interface PortfolioVM {
     desc: string;
     isShow: boolean;
     isShowTxt?: String;
+    portfolioItemList?: PortfolioItemVM[];
 }
 
 // 摄影作品集详情中的作品项列表视图模型
