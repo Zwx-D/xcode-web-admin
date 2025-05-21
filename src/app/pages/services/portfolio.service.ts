@@ -71,6 +71,11 @@ export class PortfolioService {
         return this.http.post<PortfolioVM>(this.projectService.getBackendConfig().baseUrl + this.portfolioUrl, data).toPromise();
     }
 
+    update(data: PortfolioVM): Promise<PortfolioVM> {
+        return this.http.put<PortfolioVM>(this.projectService.getBackendConfig().baseUrl + this.portfolioUrl, data).toPromise();
+
+    }
+
     changeIsShow(uuid: string, isShow: boolean): Promise<void> {
         return this.http.get<void>(this.projectService.getBackendConfig().baseUrl + this.changeIsShowUrl + uuid, {
             params: {

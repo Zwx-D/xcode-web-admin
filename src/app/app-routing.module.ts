@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'photography', loadChildren: () => import('./pages/module/wx-content-management/photography/photography.module').then(m => m.PhotographyModule) },
   { path: 'wxHomeFunction', loadChildren: () => import('./pages/module/wx-content-management/function/function.module').then(m => m.FunctionModule) },
   { path: 'portfolio', loadChildren: () => import('./pages/module/wx-content-management/portfolio/portfolio.moudle').then(m => m.PortfolioModule) },
-  { path: 'photographer', loadChildren: () => import('./pages/module/wx-content-management/photographer/photographer.moudle').then(m => m.PhotographerModule) }
+  { path: 'photographer', loadChildren: () => import('./pages/module/wx-content-management/photographer/photographer.moudle').then(m => m.PhotographerModule) },
+  { path: 'portfolioTag', loadChildren: () => import('./pages/module/wx-content-management/portfolio-tag/portfolio-tag.module').then(m => m.PortfolioTagModule) }
 
 ];
 

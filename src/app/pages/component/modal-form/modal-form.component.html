@@ -5,6 +5,12 @@
             <!-- <input [type]="item.type" nz-input [formControlName]="item.key"
                 [placeholder]="item.placeholder?item.placeholder:''" /> -->
             <ng-container [ngSwitch]="item.type">
+
+                <!-- 处理 select 类型 -->
+                <nz-select *ngSwitchCase="'select'"  [formControlName]="item.key" nzAllowClear [nzPlaceHolder]="item.placeholder || ''">
+                    <nz-option *ngFor="let optItem of item.options" [nzValue]="optItem.value"
+                        [nzLabel]="optItem.label"></nz-option>
+                </nz-select>
                 <!-- 处理 text 和 number 类型 -->
                 <input *ngSwitchCase="'text'" [type]="item.type" nz-input [formControlName]="item.key"
                     [placeholder]="item.placeholder || ''" />
@@ -23,9 +29,7 @@
 
                 <nz-upload *ngSwitchCase="'upload'" class="avatar-uploader" [nzAction]="uploadUrl" [nzName]="item.key"
                     nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"
-                    [nzSize]="uploadSize" [nzLimit]="uploadLimit"
-                    [nzCustomRequest]="uploadImg"
-                    >
+                    [nzSize]="uploadSize" [nzLimit]="uploadLimit" [nzCustomRequest]="uploadImg">
                     <ng-container *ngIf="!avatarUrl">
                         <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
                         <div class="ant-upload-text">{{ item.label }}</div>

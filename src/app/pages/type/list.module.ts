@@ -70,7 +70,7 @@ export class ButtonConfig {
     event: (event) => void
 }
 
-type InputType = 'text' | 'number' | 'datepicker' | 'checkbox' | 'switch' | 'upload';
+type InputType = 'text' | 'number' | 'datepicker' | 'checkbox' | 'switch' | 'upload' | 'select';
 export interface ModalFormItem {
     key: string;
     vali?: ValidatorFn;
@@ -79,6 +79,11 @@ export interface ModalFormItem {
     errorTip?: string;
     placeholder?: string;
     required?: boolean;
+    options?: Options[];
+}
+export interface Options {
+    label: string;
+    value: string;
 }
 
 // 用户列表视图模型
@@ -140,7 +145,8 @@ export interface PortfolioVM {
     sortOrder: number;
     desc: string;
     isShow: boolean;
-    isShowTxt?: String;
+    isShowTxt?: string;
+    typeTag?: string;
     portfolioItemList?: PortfolioItemVM[];
 }
 
@@ -155,6 +161,13 @@ export interface PortfolioItemVM {
     desc: string;
     isShow: boolean;
     isShowTxt?: String;
+}
+
+export interface PortfolioTagVM {
+    uuid: string;
+    id: number;
+    name: string;
+    desc: string;
 }
 
 export interface FunctionVM {

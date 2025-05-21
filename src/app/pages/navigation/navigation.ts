@@ -35,6 +35,12 @@ export const navigation: MenuNavigation[] = [
                 icon: "",
                 type: "item",
                 url: "portfolio"
+            },
+            {
+                title: "摄影作品集标签",
+                icon: "",
+                type: "item",
+                url: "portfolioTag"
             }
         ]
     },

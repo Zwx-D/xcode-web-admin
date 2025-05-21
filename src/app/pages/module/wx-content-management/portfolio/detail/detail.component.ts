@@ -6,6 +6,7 @@ import { BehaviorSubject } from "rxjs";
 import { ModalFormComponent } from "src/app/pages/component/modal-form/modal-form.component";
 import { SelectImageComponent } from "src/app/pages/component/select-image/select-image.component";
 import { FilesService } from "src/app/pages/services/files.service";
+import { PortfolioTagService } from "src/app/pages/services/portfolio-tag.service";
 import { PortfolioService } from "src/app/pages/services/portfolio.service";
 import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PortfolioItemVM, PortfolioVM } from "src/app/pages/type/list.module";
 import { CreatePortfolioItemDTO } from "src/app/pages/type/portfolio.type";
@@ -18,6 +19,7 @@ import { CreatePortfolioItemDTO } from "src/app/pages/type/portfolio.type";
 })
 export class PortfolioDetailComponent implements OnInit {
 
+    typelist: { label: string, value: string }[] = []
     textareaSize = { minRows: 6, maxRows: 20 }
     inEdit: boolean = false;
     formData: FormGroup;
@@ -111,12 +113,22 @@ export class PortfolioDetailComponent implements OnInit {
         private router: Router,
         private fb: FormBuilder,
         private filesService: FilesService,
-        private modalService: NzModalService) { }
+        private modalService: NzModalService,
+        private portfolioTagService: PortfolioTagService) { }
 
     ngOnInit() {
         if (!history.state.data) {
             this.router.navigate(['/portfolio']);
         }
+
+        this.portfolioTagService.getAll().then(res => {
+            this.typelist = res.map(item => {
+                return {
+                    label: item.name,
+                    value: item.name
+                }
+            });
+        });
         this.data = history.state.data;
         this.avatarUrl = this.filesService.previewImg(this.data.imageUuid);
         this.formData = this.fb.group({
@@ -124,8 +136,11 @@ export class PortfolioDetailComponent implements OnInit {
             imageUuid: [this.data.imageUuid],
             desc: [this.data.desc],
             isShow: [this.data.isShow],
-            sortOrder: [this.data.sortOrder]
+            sortOrder: [this.data.sortOrder],
+            typeTag: [this.data.typeTag]
         });
+
+
     }
 
     loadData = (queryFilter: ListQueryParams) => {
@@ -161,6 +176,21 @@ export class PortfolioDetailComponent implements OnInit {
 
     save() {
         this.inEdit = false;
+        const formData = this.formData.getRawValue();
+        const data: PortfolioVM = {
+            uuid: this.data.uuid,
+            id: this.data.id,
+            name: formData.name,
+            imageUuid: formData.imageUuid,
+            linkUrl: this.data.linkUrl,
+            sortOrder: formData.sortOrder,
+            desc: formData.desc,
+            isShow: formData.isShow,
+            typeTag: formData.typeTag
+        }
+        this.service.update(data).then(res => {
+            this.router.navigate(['/portfolio']);
+        });
     }
 
     cancelEdit() {

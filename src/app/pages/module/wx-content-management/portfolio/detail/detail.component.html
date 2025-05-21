@@ -32,6 +32,16 @@
                 </nz-form-item>
 
                 <nz-form-item>
+                    <nz-form-label nzSpan="8">作品集标签</nz-form-label>
+                    <nz-form-control nzSpan="12">
+                        <nz-select formControlName="typeTag" nzAllowClear [nzDisabled]="!inEdit" >
+                            <nz-option *ngFor="let item of typelist" [nzValue]="item.value"
+                                [nzLabel]="item.label"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
                     <nz-form-label nzSpan="8">排序</nz-form-label>
                     <nz-form-control nzSpan="12">
                         <nz-input-number formControlName="sortOrder" [nzMin]="1" [nzMax]="100" [nzStep]="1"

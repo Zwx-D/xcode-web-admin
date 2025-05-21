@@ -5,6 +5,7 @@ import { NzModalService } from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { ModalFormComponent } from 'src/app/pages/component/modal-form/modal-form.component';
 import { FilesService } from 'src/app/pages/services/files.service';
+import { PortfolioTagService } from 'src/app/pages/services/portfolio-tag.service';
 import { PortfolioService } from 'src/app/pages/services/portfolio.service';
 import { ButtonConfig, ColumnConfig, CommonResponse, ListQueryParams, ModalFormItem, PortfolioVM } from 'src/app/pages/type/list.module';
 
@@ -54,7 +55,7 @@ export class PortfolioComponent implements OnInit {
       label: 'ID',
       enableSelect: true,
       canSort: true,
-      width: 10
+      width: 5
     }, {
       name: 'linkUrl',
       label: '封面',
@@ -78,7 +79,14 @@ export class PortfolioComponent implements OnInit {
       label: '排序',
       enableSelect: true,
       canSort: true,
-      width: 15
+      width: 10
+    }, {
+      name: 'typeTag',
+      selectType: 'input',
+      label: '标签',
+      enableSelect: true,
+      canSort: true,
+      width: 10
     }, {
       name: 'btn',
       label: '操作',
@@ -125,7 +133,8 @@ export class PortfolioComponent implements OnInit {
   constructor(private service: PortfolioService,
     private modalService: NzModalService,
     private filesService: FilesService,
-    private route: Router) { }
+    private route: Router,
+    private portfolioTagService: PortfolioTagService) { }
 
   ngOnInit() {
   }
@@ -137,54 +146,68 @@ export class PortfolioComponent implements OnInit {
   }
 
   createPortfolio() {
-    const formConfig: ModalFormItem[] = [
-      {
-        "key": "name",
-        "label": "作品名称",
-        "type": "text",
-        "vali": Validators.required
-      },
-      {
-        "key": "imageUuid",
-        "label": "请选择图片",
-        "type": "upload",
-        "vali": Validators.required
-      }, {
-        "key": "desc",
-        "label": "备注",
-        "type": "text"
-      },
-      {
-        "key": "sortOrder",
-        "label": "顺序",
-        "type": "number",
-        "vali": Validators.required
-      }
 
-    ]
-
-    const modal = this.modalService.create({
-      nzTitle: '新建轮播图',
-      nzContent: ModalFormComponent,
-      nzComponentParams: {
-        formConfig: formConfig
-      },
-      nzOnOk: () => new Promise((resolve) => {
-        const instance = modal.getContentComponent();
-        if (instance.form.valid) {
-          this.onConfirm(instance.form.value);
-          resolve(true);
-        } else {
-          resolve(false);
+    this.portfolioTagService.getAll().then(res => {
+      const options = res.map(item => {
+        return {
+          label: item.name,
+          value: item.name
         }
-      }),
-      nzOnCancel: () => {
-        this.onCancel();
-      }
+      });
+
+      const formConfig: ModalFormItem[] = [
+        {
+          "key": "name",
+          "label": "作品名称",
+          "type": "text",
+          "vali": Validators.required
+        },
+        {
+          "key": "imageUuid",
+          "label": "请选择图片",
+          "type": "upload",
+          "vali": Validators.required
+        }, {
+          "key": "desc",
+          "label": "备注",
+          "type": "text"
+        },
+        {
+          "key": "sortOrder",
+          "label": "顺序",
+          "type": "number",
+          "vali": Validators.required
+        }, {
+          "key": "typeTag",
+          "label": "标签",
+          "type": "select",
+          "options": options
+        }
+      ]
+      const modal = this.modalService.create({
+        nzTitle: '新建作品集',
+        nzContent: ModalFormComponent,
+        nzComponentParams: {
+          formConfig: formConfig
+        },
+        nzOnOk: () => new Promise((resolve) => {
+          const instance = modal.getContentComponent();
+          if (instance.form.valid) {
+            this.onConfirm(instance.form.value);
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }),
+        nzOnCancel: () => {
+          this.onCancel();
+        }
+      });
     });
+
   }
 
-  onConfirm(data: { imageUuid: string, sortOrder: number, name: string, desc: string }) {
+  onConfirm(data: { imageUuid: string, sortOrder: number, name: string, desc: string, typeTag: string }) {
     console.log(data);
     const req: PortfolioVM = {
       uuid: null,
@@ -194,7 +217,8 @@ export class PortfolioComponent implements OnInit {
       sortOrder: data.sortOrder,
       isShow: false,
       name: data.name,
-      desc: data.desc ? data.desc : null
+      desc: data.desc ? data.desc : null,
+      typeTag: data.typeTag ? data.typeTag : null
     };
     this.service.createPortfolio(req).then(res => {
       this.loadData(this.queryFilter);
